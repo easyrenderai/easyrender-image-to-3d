@@ -1,0 +1,19 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "easyrender",
+  "version": "1.0.0",
+  "description": "Turn a product photo into a textured GLB model with easyrender. Inspect a free preview before an approved paid build.",
+  "author": {
+    "name": "easyrender",
+    "url": "https://easyrender.ai"
+  },
+  "homepage": "https://easyrender.ai/mcp",
+  "repository": "https://github.com/easyrenderai/easyrender-image-to-3d",
+  "license": "MIT",
+  "keywords": [
+    "image-to-3d",
+    "glb",
+    "mcp",
+    "agent-skills"
+  ]
+}
