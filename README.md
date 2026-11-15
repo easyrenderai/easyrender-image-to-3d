@@ -4,6 +4,14 @@ Agent skill that turns one product photo into a textured 3D model (GLB) with [ea
 
 This repository is the standalone copy of the skill package (MIT) from [`easyrenderai/easyrender.ai`](https://github.com/easyrenderai/easyrender.ai/tree/main/skills/easyrender-image-to-3d). It exists so directories such as skills.sh can list the skill from a repository name without a dot.
 
+## Example
+
+![easyrender process: source photo, angle sheet, then textured 3D model](assets/photo-to-3d.jpg)
+
+Existing easyrender showcase assets: photo → angle sheet → 3D model. The sheet shown is a finished example; the free preview is watermarked.
+
+[Download the example armchair model (GLB)](https://easyrender.ai/showcase/armchair.glb?v=2) · [See the workflow](https://easyrender.ai/mcp)
+
 ## Install
 
 ```sh
