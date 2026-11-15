@@ -1,0 +1,10 @@
+{
+  "name": "easyrender-image-to-3d",
+  "version": "1.0.0",
+  "description": "Remote image-to-3D: preview a product photo, then build a textured GLB with account credits.",
+  "mcpServers": {
+    "easyrender": {
+      "httpUrl": "https://easyrender.ai/api/mcp"
+    }
+  }
+}
