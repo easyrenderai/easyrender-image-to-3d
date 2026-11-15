@@ -1,0 +1,57 @@
+name: Validate skill package
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - name: Validate skill metadata, local references and MCP contract
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          root = Path.cwd()
+          skill = (root / 'SKILL.md').read_text()
+          frontmatter = re.match(r'\A---\s*\n(.*?)\n---\s*\n', skill, re.S)
+          assert frontmatter, 'SKILL.md must have frontmatter'
+          for field in ('name', 'description', 'license'):
+              assert re.search(rf'^{field}:\s*\S', frontmatter[1], re.M), f'Missing {field}'
+          assert re.search(r'^name: easyrender-image-to-3d$', frontmatter[1], re.M)
+          for document in [root / 'SKILL.md', *sorted((root / 'references').glob('*.md'))]:
+              for target in re.findall(r'\]\(([^\s)]+)', document.read_text()):
+                  if '://' in target or target.startswith(('#', 'mailto:')):
+                      continue
+                  path = (document.parent / target.split('#')[0]).resolve()
+                  assert path.is_relative_to(root) and path.is_file(), f'Broken local link: {target}'
+          manifest = json.loads((root / 'gemini-extension.json').read_text())
+          assert manifest['name'] == 'easyrender-image-to-3d'
+          assert manifest['mcpServers']['easyrender']['httpUrl'] == 'https://easyrender.ai/api/mcp'
+          assert (root / 'agents/openai.yaml').is_file()
+          contract = (root / 'references/mcp.md').read_text()
+          tools = set(re.findall(r'^\|\s*`([a-z_0-9]+)`\s*\|', contract, re.M))
+          expected = {
+              'create_render', 'get_render', 'list_renders', 'get_credits', 'render_3d',
+              'set_render_visibility', 'start_render_sheet', 'redraw_render_sheet',
+              'upscale_image', 'get_upscale', 'list_upscales', 'create_product_views',
+              'get_product_views', 'list_product_views', 'polish_product_view',
+              'build_from_product_views',
+          }
+          assert tools == expected, f'MCP tool drift: {tools ^ expected}'
+          for term in ('upload_id', 'idempotency_key', 'max_credits', 'structuredContent',
+                       'isError', '4 MiB', '3 MiB minus 16 KiB', 'creditLimit'):
+              assert term in contract, f'Missing contract detail: {term}'
+          assert 'there are no `list_renders`' not in contract.lower()
+          print('Skill metadata, references, Gemini package and 16-tool contract validated')
+          PY
+      - name: Check whitespace
+        run: git diff --check HEAD^ HEAD
