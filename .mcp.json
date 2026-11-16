@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "easyrender": {
+      "url": "https://easyrender.ai/api/mcp"
+    }
+  }
+}
