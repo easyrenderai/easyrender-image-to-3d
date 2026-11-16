@@ -7,10 +7,16 @@ This repository is the standalone copy of the skill package (MIT) from [`easyren
 ## Install
 
 ```sh
-npx skills add Jorgerl02/easyrender-image-to-3d
+npx skills add easyrenderai/easyrender-image-to-3d
 ```
 
-Installation adds instructions. It does not connect an easyrender account or spend credits. Connect MCP at [easyrender.ai/mcp](https://easyrender.ai/mcp#connect).
+Installation adds instructions. It does not connect an easyrender account or spend credits. Connect the MCP server first:
+
+```sh
+claude mcp add --transport http easyrender https://easyrender.ai/api/mcp
+```
+
+Other clients, OAuth sign-in and API keys: [easyrender.ai/mcp](https://easyrender.ai/mcp#connect). Try: "Use the easyrender-image-to-3d skill to turn this photo into a GLB. Show me the preview and cost before spending any credits."
 
 ## License
 
